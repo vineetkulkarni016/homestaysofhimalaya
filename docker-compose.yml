@@ -1,5 +1,24 @@
-version: '3.8'
+version: "3.9"
+
 services:
+  booking:
+    build: ./services/booking
+    ports:
+      - "8000:8000"
+    environment:
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+  users:
+    build: ./services/users
+    ports:
+      - "8001:8000"
+    environment:
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
   web:
     image: node:20
     working_dir: /app
@@ -17,6 +36,7 @@ services:
       - datadog
     ports:
       - "3000:3000"
+
   datadog:
     image: datadog/agent:7
     environment:
