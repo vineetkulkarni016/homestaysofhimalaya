@@ -1,13 +1,17 @@
 {
   "name": "homestaysofhimalaya",
   "version": "1.0.0",
-  "description": "Homestays of Himalaya API server with OpenAPI docs",
-  "main": "index.js",
+  "description": "Uttarakhand homestays bookings & rentals API with OpenAPI docs",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "docs": "redoc-cli bundle service/openapi.yaml -o docs/index.html",
-    "test": "echo 'No tests'"
+    "test": "node -e \"console.log('No tests')\""
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
     "swagger-ui-express": "^4.6.3",
