@@ -1,0 +1,16 @@
+[
+  {
+    "name": "High request latency",
+    "type": "query alert",
+    "query": "avg(last_5m):p95:trace.http.request.duration{service:homestaysofhimalaya} > 1",
+    "message": "High latency detected. Notify @pagerduty",
+    "tags": ["service:homestaysofhimalaya", "env:prod"]
+  },
+  {
+    "name": "High error rate",
+    "type": "query alert",
+    "query": "avg(last_5m):sum:trace.http.errors{service:homestaysofhimalaya}/sum:trace.http.request{service:homestaysofhimalaya} > 0.05",
+    "message": "Error rate >5%. Notify @pagerduty",
+    "tags": ["service:homestaysofhimalaya", "env:prod"]
+  }
+]

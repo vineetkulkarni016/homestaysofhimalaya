@@ -1,0 +1,6 @@
+booking:
+  database_url: "/homestaysofhimalaya/dev-staging/booking/database_url"
+  redis_url: "/homestaysofhimalaya/dev-staging/booking/redis_url"
+payments:
+  database_url: "/homestaysofhimalaya/dev-staging/payments/database_url"
+  redis_url: "/homestaysofhimalaya/dev-staging/payments/redis_url"
