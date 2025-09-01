@@ -1,0 +1,14 @@
+{
+  "name": "homestaysofhimalaya",
+  "version": "1.0.0",
+  "description": "Uttarakhand Homestays , bike &amp; car rentals booking and management.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node -e \"console.log('No tests')\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
