@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  web:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: ["node", "server.js"]
+    environment:
+      - DD_AGENT_HOST=datadog
+      - DD_ENV=production
+      - DD_SERVICE=homestaysofhimalaya
+      - DD_LOGS_ENABLED=true
+      - DD_APM_ENABLED=true
+      - DD_TRACE_AGENT_PORT=8126
+    depends_on:
+      - datadog
+    ports:
+      - "3000:3000"
+  datadog:
+    image: datadog/agent:7
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_LOGS_ENABLED=true
+      - DD_APM_ENABLED=true
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+    ports:
+      - "8126:8126"
