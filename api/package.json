@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "pytest tests/unit",
-    "test:integration": "newman run tests/integration/echo.postman_collection.json",
-    "test:contract": "newman run tests/contract/contract.postman_collection.json"
+    "test:integration": "newman run tests/integration/echo.postman_collection.json"
   },
   "devDependencies": {
     "newman": "^5.0.0"

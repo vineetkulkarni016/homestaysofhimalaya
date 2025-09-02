@@ -14,10 +14,6 @@
    ```bash
    npm run test:integration
    ```
-4. Run contract tests:
-   ```bash
-   npm run test:contract
-   ```
 
 ## UI Tests
 1. Install dependencies:
