@@ -1,0 +1,13 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest",
+    "test:integration": "newman run tests/integration/echo.postman_collection.json",
+    "test:contract": "newman run tests/contract/contract.postman_collection.json"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "newman": "^5.0.0"
+  }
+}
