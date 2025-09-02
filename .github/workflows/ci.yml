@@ -54,7 +54,7 @@ jobs:
       - run: |
           cd api
           npm install
-          pip install -r ../services/booking/requirements.txt -r ../services/users/requirements.txt pytest
+          pip install -r ../services/booking/requirements.txt -r ../services/users/requirements.txt -r ../services/payments/requirements.txt pytest
           npm test
       - run: |
           cd ui
