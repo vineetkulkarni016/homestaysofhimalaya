@@ -6,7 +6,10 @@ Himalayan Homestays, bike & car rentals booking and management.
 - Booking service
 - User service
 
-A payments service is not implemented and related configuration has been removed.
+
+A payments service is currently not implemented and related configuration has been removed from all development environments.
+
+
 
 ## Development
 
@@ -18,3 +21,4 @@ npm start
 ```
 
 The server runs from `index.js` on port `3000` by default and exposes API docs at `http://localhost:3000/docs`.
+
