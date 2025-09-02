@@ -1,21 +1,7 @@
-import logging
 from fastapi import FastAPI
-from pythonjsonlogger import jsonlogger
-import watchtower
+from services.common.logging import get_logger
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-
-stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(jsonlogger.JsonFormatter())
-logger.addHandler(stream_handler)
-
-try:
-    cw_handler = watchtower.CloudWatchLogHandler(log_group="/homestays/services", stream_name="payment-service")
-    cw_handler.setFormatter(jsonlogger.JsonFormatter())
-    logger.addHandler(cw_handler)
-except Exception as e:
-    logger.warning("Unable to initialize CloudWatch log handler", extra={"error": str(e)})
+logger = get_logger("payment-service")
 
 app = FastAPI()
 
