@@ -66,6 +66,11 @@ app.get('/payments', async (req, res) => {
   res.json(data);
 });
 
+app.get('/support', async (req, res) => {
+  const data = await proxyOrStub(process.env.CUSTOMER_CARE_URL, 'customer_care');
+  res.json(data);
+});
+
 const port = process.env.PORT || 3000;
 if (require.main === module) {
   app.listen(port, () => {
