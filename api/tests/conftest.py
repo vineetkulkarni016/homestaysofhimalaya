@@ -26,3 +26,8 @@ def booking_module():
 @pytest.fixture(scope="module")
 def users_module():
     return load_service_module('users')
+
+
+@pytest.fixture(scope="module")
+def payments_module():
+    return load_service_module('payments')
