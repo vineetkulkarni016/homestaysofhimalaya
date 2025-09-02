@@ -1,6 +1,6 @@
 # Node dependencies
 node_modules/
-service/node_modules/
+services/node_modules/
 ui/node_modules/
 
 # Python virtual environment
