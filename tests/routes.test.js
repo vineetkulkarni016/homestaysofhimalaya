@@ -51,3 +51,21 @@ test('returns stub data for bookings service', async () => {
   const body = await res.json();
   assert.deepStrictEqual(body, { service: 'booking', message: 'Hello World' });
 });
+
+test('returns stub data for users service', async () => {
+  const res = await fetch(`${baseUrl()}/users`, {
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'user', message: 'Hello World' });
+});
+
+test('returns stub data for payments service', async () => {
+  const res = await fetch(`${baseUrl()}/payments`, {
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'payment', message: 'Hello World' });
+});
