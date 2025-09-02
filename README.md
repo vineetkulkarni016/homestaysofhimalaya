@@ -1,2 +1,2 @@
-# homestaysofuk
-Uttarakhand Homestays , bike &amp; car rentals booking and management.
+# HomestaysOfHimalaya
+Himalayan Homestays , bike &amp; car rentals booking and management.
