@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
+const { Readable } = require('stream');
 const http = require('http');
 const { Server } = require('socket.io');
 const { createClient } = require('redis');
@@ -21,11 +22,15 @@ if (!globalThis.fetch) {
 
 const app = express();
 app.use(express.json());
-const spec = yaml.load(fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8'));
+
+const spec = yaml.load(
+  fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8')
+);
 
 const API_KEY = process.env.API_KEY || 'dev-key';
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN || 'dev-token';
 
+// Simple API key / bearer auth
 app.use((req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   const auth = req.headers['authorization'];
@@ -55,68 +60,17 @@ async function proxyOrStub(serviceUrl, serviceName) {
   return { service: serviceName, message: 'Hello World' };
 }
 
-app.get('/bookings', async (req, res) => {
-  const data = await proxyOrStub(process.env.BOOKINGS_URL, 'booking');
-  res.json(data);
-});
-
-app.get('/users', async (req, res) => {
-  const data = await proxyOrStub(process.env.USERS_URL, 'user');
-  res.json(data);
-});
-
-app.get('/payments', async (req, res) => {
-  const data = await proxyOrStub(process.env.PAYMENTS_URL, 'payment');
-  res.json(data);
-});
-
-app.get('/cabs', async (req, res) => {
-  const data = await proxyOrStub(process.env.CABS_URL, 'cabs');
-  res.json(data);
-});
-
-app.post('/cabs/rides', async (req, res) => {
-  if (process.env.CABS_URL) {
+async function proxyStreamOrStub(req, res, serviceUrl, serviceName) {
+  if (serviceUrl) {
     try {
-      const response = await fetch(`${process.env.CABS_URL}/rides`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body)
+      const url = new URL(req.originalUrl.replace(/^\/bike-rentals/, ''), serviceUrl);
+      const headers = { ...req.headers };
+      delete headers.host;
+      const response = await fetch(url, {
+        method: req.method,
+        headers,
+        body: ['GET', 'HEAD'].includes(req.method) ? undefined : req,
+        duplex: 'half',
       });
-      const body = await response.json();
-      return res.status(response.status).json(body);
-    } catch (err) {
-      console.warn('Failed to proxy cabs service:', err.message);
-    }
-  }
-  res.status(501).json({ error: 'Cabs service unavailable' });
-});
-
-const port = process.env.PORT || 3000;
-
-function startServer() {
-  const server = http.createServer(app);
-  const io = new Server(server, { cors: { origin: '*' } });
-  const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-  const sub = createClient({ url: redisUrl });
-  sub
-    .connect()
-    .then(() =>
-      sub.subscribe('driver_locations', (message) => {
-        io.emit('location_update', JSON.parse(message));
-      })
-    )
-    .catch((err) =>
-      console.warn('Redis subscription failed:', err.message)
-    );
-
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
-
-if (require.main === module) {
-  startServer();
-}
-
-module.exports = app;
+      res.status(response.status);
+      response.headers.forE
