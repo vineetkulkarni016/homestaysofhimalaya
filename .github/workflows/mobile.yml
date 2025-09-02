@@ -1,0 +1,28 @@
+name: mobile
+
+on:
+  push:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd mobile && npm install
+      - name: Test
+        run: cd mobile && npm test --if-present
+      - name: Android build
+        run: cd mobile/android && ./build.sh
+      - name: iOS build
+        run: cd mobile/ios && ./build.sh
