@@ -2,3 +2,13 @@ fastapi
 uvicorn[standard]
 watchtower
 python-json-logger
+SQLAlchemy
+alembic
+psycopg2-binary
+PyJWT
+tenacity
+pybreaker
+celery
+redis
+pytest
+httpx
