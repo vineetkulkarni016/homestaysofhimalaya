@@ -1,0 +1,29 @@
+{
+  "title": "Service Overview",
+  "description": "Key service metrics",
+  "layout_type": "ordered",
+  "widgets": [
+    {
+      "definition": {
+        "title": "Request latency (p95)",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:trace.http.request.duration{service:homestaysofhimalaya}.rollup(avg, 60)"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "title": "Error rate",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "100 * sum:trace.http.errors{service:homestaysofhimalaya}.rollup(sum, 60) / sum:trace.http.request{service:homestaysofhimalaya}.rollup(sum, 60)"
+          }
+        ]
+      }
+    }
+  ]
+}
