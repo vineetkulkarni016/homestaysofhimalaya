@@ -66,6 +66,11 @@ app.get('/payments', async (req, res) => {
   res.json(data);
 });
 
+app.get('/bike-rentals', async (req, res) => {
+  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
+  res.json(data);
+});
+
 const port = process.env.PORT || 3000;
 if (require.main === module) {
   app.listen(port, () => {

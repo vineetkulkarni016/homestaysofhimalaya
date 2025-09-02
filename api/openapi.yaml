@@ -59,6 +59,128 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+  /bike-rentals:
+    get:
+      summary: Bike rentals service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: Bike rentals service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
+  /bike-rentals/availability:
+    get:
+      summary: List available bikes
+      responses:
+        '200':
+          description: Available bikes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available_bikes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        model:
+                          type: string
+  /bike-rentals/book:
+    post:
+      summary: Book a bike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                bike_id:
+                  type: integer
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id:
+                    type: integer
+  /bike-rentals/return:
+    post:
+      summary: Return a bike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                booking_id:
+                  type: integer
+      responses:
+        '200':
+          description: Bike returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /bike-rentals/documents/upload:
+    post:
+      summary: Upload driving license and Aadhar card
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                driving_license:
+                  type: string
+                  format: binary
+                aadhar_card:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        document:
+                          type: string
+                        s3_key:
+                          type: string
+                        text:
+                          type: string
+                        manual_review:
+                          type: boolean
 components:
   schemas:
     Homestay:

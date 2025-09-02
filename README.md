@@ -6,6 +6,7 @@ Himalayan Homestays, bike & car rentals booking and management.
 - Booking service
 - User service
 - Payment service
+- Bike rentals service
 
 
 

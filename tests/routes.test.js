@@ -74,3 +74,12 @@ test('returns stub data for payments service', async () => {
   const body = await res.json();
   assert.deepStrictEqual(body, { service: 'payment', message: 'Hello World' });
 });
+
+test('returns stub data for bike rentals service', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals`, {
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+});
