@@ -24,6 +24,7 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install pytest
+      - run: pip install -r services/booking/requirements.txt -r services/users/requirements.txt -r services/payments/requirements.txt
       - run: pytest
 
   security:
