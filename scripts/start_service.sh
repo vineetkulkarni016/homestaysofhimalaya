@@ -35,5 +35,5 @@ REDIS_URL=$(aws ssm get-parameter --name "$REDIS_PARAM" --with-decryption --outp
 export DB_URL REDIS_URL
 
 echo "Starting $SERVICE with configuration from $CONFIG_FILE"
-# Placeholder for actual service command
-exec "./$SERVICE" "$@"
+# Launch the FastAPI service using uvicorn
+exec uvicorn app:app --host 0.0.0.0 --port 8000 "$@"
