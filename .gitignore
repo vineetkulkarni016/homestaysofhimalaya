@@ -1,0 +1,17 @@
+# Node dependencies
+node_modules/
+service/node_modules/
+ui/node_modules/
+
+# Python virtual environment
+venv/
+
+# Build outputs
+dist/
+build/
+coverage/
+out/
+tmp/
+*.log
+# Test outputs
+**/test-results/
