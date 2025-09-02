@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Request Ride</title>
+</head>
+<body>
+  <h1>Request Ride</h1>
+  <form id="ride-form">
+    <input id="pickup" placeholder="Pickup lat,lon" />
+    <input id="dropoff" placeholder="Dropoff lat,lon" />
+    <button type="submit">Request</button>
+  </form>
+  <pre id="result"></pre>
+  <script>
+    document.getElementById('ride-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const [pickup_lat, pickup_lon] = document.getElementById('pickup').value.split(',').map(Number);
+      const [dropoff_lat, dropoff_lon] = document.getElementById('dropoff').value.split(',').map(Number);
+      const res = await fetch('/cabs/rides', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': 'dev-key' },
+        body: JSON.stringify({ rider_id: 'demo', pickup_lat, pickup_lon, dropoff_lat, dropoff_lon })
+      });
+      const body = await res.json();
+      document.getElementById('result').textContent = JSON.stringify(body, null, 2);
+    });
+  </script>
+</body>
+</html>

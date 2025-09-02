@@ -6,8 +6,16 @@ Himalayan Homestays, bike & car rentals booking and management.
 - Booking service
 - User service
 - Payment service
+- Bike rentals service
 
+## Single-click local launch
 
+To run all services locally in one step:
+
+1. Copy `.env.example` to `.env` and fill in the required values.
+2. Execute `./scripts/setup_local.sh`.
+
+The script installs Docker and Docker Compose if needed and then brings up the stack using `docker compose` with the environment configuration from `.env`.
 
 ## Development
 
