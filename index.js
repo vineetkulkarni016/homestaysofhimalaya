@@ -92,8 +92,9 @@ app.get('/payments', async (req, res) => {
   res.json(data);
 });
 
-app.get('/hosts', async (req, res) => {
-  const data = await proxyOrStub(process.env.HOSTS_URL, 'hosts');
+app.get('/bike-rentals', async (req, res) => {
+  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
+
   res.json(data);
 });
 
