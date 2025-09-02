@@ -59,6 +59,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+  /hosts:
+    get:
+      summary: Hosts service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: Hosts service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
 components:
   schemas:
     Homestay:

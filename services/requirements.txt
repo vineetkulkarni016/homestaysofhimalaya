@@ -1,3 +1,4 @@
 -r booking/requirements.txt
 -r users/requirements.txt
 -r payments/requirements.txt
+-r hosts/requirements.txt
