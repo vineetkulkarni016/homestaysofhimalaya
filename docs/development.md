@@ -14,8 +14,7 @@
 3. Access the services:
    - Booking service: `http://localhost:8000`
    - User service: `http://localhost:8001`
-
-The payments service has been removed from this project.
+   - Payment service: `http://localhost:8002`
 
 Logs are emitted in JSON format and, when AWS credentials are available, forwarded to CloudWatch.
 

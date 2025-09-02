@@ -24,6 +24,12 @@ For example, the booking service database URL for the integration environment is
 /homestaysofhimalaya/dev-integration/booking/database_url
 ```
 
+Similarly, the payments service database URL for the integration environment is stored at:
+
+```
+/homestaysofhimalaya/dev-integration/payments/database_url
+```
+
 Parameters should be created with `--type SecureString` for sensitive values.
 
 ## Using Configuration
@@ -35,6 +41,12 @@ To start the booking service in the staging environment:
 
 ```bash
 APP_ENV=dev-staging services/booking/start.sh
+```
+
+To start the payments service in the staging environment:
+
+```bash
+APP_ENV=dev-staging services/payments/start.sh
 ```
 
 Ensure the IAM role or AWS credentials used by the service allow `ssm:GetParameter` access.
