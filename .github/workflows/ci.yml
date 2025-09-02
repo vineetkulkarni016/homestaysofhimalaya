@@ -36,3 +36,27 @@ jobs:
           python-version: '3.x'
       - run: pip install bandit
       - run: bandit -r .
+
+  node-tests:
+    runs-on: ubuntu-latest
+    needs: security
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: npm install
+      - run: npm test
+      - run: |
+          cd api
+          npm install
+          pip install -r ../services/booking/requirements.txt -r ../services/users/requirements.txt pytest
+          npm test
+      - run: |
+          cd ui
+          npm install
+          npx playwright install chromium
+          npm test
