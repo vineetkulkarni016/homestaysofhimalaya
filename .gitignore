@@ -15,3 +15,4 @@ tmp/
 *.log
 # Test outputs
 **/test-results/
+**/__pycache__/
