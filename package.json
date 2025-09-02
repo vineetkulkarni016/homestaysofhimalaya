@@ -9,7 +9,7 @@
     "start": "node index.js",
     "docs": "redoc-cli bundle api/openapi.yaml -o docs/index.html",
 
-    "test": "node -e \"console.log('No tests')\""
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
