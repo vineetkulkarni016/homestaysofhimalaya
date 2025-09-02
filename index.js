@@ -68,6 +68,7 @@ app.get('/payments', async (req, res) => {
 
 app.get('/bike-rentals', async (req, res) => {
   const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
+
   res.json(data);
 });
 

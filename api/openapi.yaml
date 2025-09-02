@@ -59,19 +59,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
   /bike-rentals:
     get:
       summary: Bike rentals service status
+
       security:
         - ApiKeyAuth: []
         - OAuth2ClientCredentials: []
       responses:
         '200':
           description: Bike rentals service root response
+
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
   /bike-rentals/availability:
     get:
       summary: List available bikes
@@ -181,6 +185,7 @@ paths:
                           type: string
                         manual_review:
                           type: boolean
+
 components:
   schemas:
     Homestay:
