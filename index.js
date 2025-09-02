@@ -11,6 +11,11 @@ const path = require('path');
 const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 
+if (!globalThis.fetch) {
+  globalThis.fetch = (...args) =>
+    import('node-fetch').then(({ default: fetch }) => fetch(...args));
+}
+
 const app = express();
 const spec = yaml.load(fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8'));
 
