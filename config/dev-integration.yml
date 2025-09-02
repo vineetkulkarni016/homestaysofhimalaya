@@ -4,3 +4,6 @@ booking:
 payments:
   database_url: "/homestaysofhimalaya/dev-integration/payments/database_url"
   redis_url: "/homestaysofhimalaya/dev-integration/payments/redis_url"
+users:
+  database_url: "/homestaysofhimalaya/dev-integration/users/database_url"
+  redis_url: "/homestaysofhimalaya/dev-integration/users/redis_url"
