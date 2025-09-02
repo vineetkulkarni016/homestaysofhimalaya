@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# start_service.sh - Launch a service with configuration from AWS SSM
+# Requires: AWS CLI and Python with the PyYAML package installed.
+
 set -euo pipefail
 
 SERVICE="$1"
@@ -8,6 +11,16 @@ CONFIG_FILE="config/${APP_ENV}.yml"
 
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "Config file $CONFIG_FILE not found" >&2
+  exit 1
+fi
+
+if ! command -v aws >/dev/null 2>&1; then
+  echo "Error: aws CLI is required but not installed." >&2
+  exit 1
+fi
+
+if ! python -c "import yaml" >/dev/null 2>&1; then
+  echo "Error: Python with PyYAML is required but not installed." >&2
   exit 1
 fi
 
