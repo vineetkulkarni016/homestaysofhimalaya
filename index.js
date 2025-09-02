@@ -32,6 +32,35 @@ app.get('/homestays', (req, res) => {
   res.json([{ id: 1, name: 'Sample Homestay', location: 'Himalaya' }]);
 });
 
+async function proxyOrStub(serviceUrl, serviceName) {
+  if (serviceUrl) {
+    try {
+      const response = await fetch(serviceUrl);
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.warn(`Failed to proxy ${serviceName} service:`, err.message);
+    }
+  }
+  return { service: serviceName, message: 'Hello World' };
+}
+
+app.get('/bookings', async (req, res) => {
+  const data = await proxyOrStub(process.env.BOOKINGS_URL, 'booking');
+  res.json(data);
+});
+
+app.get('/users', async (req, res) => {
+  const data = await proxyOrStub(process.env.USERS_URL, 'user');
+  res.json(data);
+});
+
+app.get('/payments', async (req, res) => {
+  const data = await proxyOrStub(process.env.PAYMENTS_URL, 'payment');
+  res.json(data);
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
