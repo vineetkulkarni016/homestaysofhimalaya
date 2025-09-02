@@ -75,11 +75,68 @@ test('returns stub data for payments service', async () => {
   assert.deepStrictEqual(body, { service: 'payment', message: 'Hello World' });
 });
 
-test('returns stub data for hosts service', async () => {
-  const res = await fetch(`${baseUrl()}/hosts`, {
+
+test('returns stub data for bike rentals service', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals`, {
+
     headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
   });
   assert.equal(res.status, 200);
   const body = await res.json();
-  assert.deepStrictEqual(body, { service: 'hosts', message: 'Hello World' });
+
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+
+});
+
+test('returns stub data for bike rentals service', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals`, {
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+});
+
+test('returns stub data for bike rentals availability', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals/availability`, {
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' }
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+});
+
+test('returns stub data for bike rentals booking', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals/book`, {
+    method: 'POST',
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' },
+    body: JSON.stringify({})
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+});
+
+test('returns stub data for bike rentals return', async () => {
+  const res = await fetch(`${baseUrl()}/bike-rentals/return`, {
+    method: 'POST',
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' },
+    body: JSON.stringify({})
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
+});
+
+test('returns stub data for bike rentals document upload', async () => {
+  const form = new FormData();
+  form.append('file', new Blob(['test'], { type: 'text/plain' }), 'test.txt');
+  const res = await fetch(`${baseUrl()}/bike-rentals/documents/upload`, {
+    method: 'POST',
+    headers: { 'x-api-key': process.env.API_KEY || 'dev-key' },
+    body: form
+  });
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.deepStrictEqual(body, { service: 'bike-rentals', message: 'Hello World' });
 });
