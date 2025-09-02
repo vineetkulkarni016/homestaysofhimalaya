@@ -1,3 +1,10 @@
+try {
+  require('dd-trace').init();
+  console.log('Datadog tracer initialized');
+} catch (err) {
+  console.warn('Datadog tracer not initialized:', err.message);
+}
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
