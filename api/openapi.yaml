@@ -20,6 +20,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Homestay'
+  /bookings:
+    get:
+      summary: Booking service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: Booking service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
+  /users:
+    get:
+      summary: User service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: User service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
 components:
   schemas:
     Homestay:
@@ -30,6 +56,13 @@ components:
         name:
           type: string
         location:
+          type: string
+    ServiceStatus:
+      type: object
+      properties:
+        service:
+          type: string
+        message:
           type: string
   securitySchemes:
     ApiKeyAuth:
