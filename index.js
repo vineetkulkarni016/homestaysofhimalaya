@@ -11,6 +11,9 @@ const path = require('path');
 const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 const { Readable } = require('stream');
+const http = require('http');
+const { Server } = require('socket.io');
+const { createClient } = require('redis');
 
 if (!globalThis.fetch) {
   globalThis.fetch = (...args) =>
@@ -18,11 +21,16 @@ if (!globalThis.fetch) {
 }
 
 const app = express();
-const spec = yaml.load(fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8'));
+app.use(express.json());
+
+const spec = yaml.load(
+  fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8')
+);
 
 const API_KEY = process.env.API_KEY || 'dev-key';
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN || 'dev-token';
 
+// Simple API key / bearer auth
 app.use((req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   const auth = req.headers['authorization'];
@@ -62,60 +70,7 @@ async function proxyStreamOrStub(req, res, serviceUrl, serviceName) {
         method: req.method,
         headers,
         body: ['GET', 'HEAD'].includes(req.method) ? undefined : req,
-        duplex: 'half'
+        duplex: 'half',
       });
       res.status(response.status);
-      response.headers.forEach((value, key) => res.setHeader(key, value));
-      if (response.body) {
-        return Readable.fromWeb(response.body).pipe(res);
-      }
-      return res.end();
-    } catch (err) {
-      console.warn(`Failed to proxy ${serviceName} service:`, err.message);
-    }
-  }
-  res.json({ service: serviceName, message: 'Hello World' });
-}
-
-app.get('/bookings', async (req, res) => {
-  const data = await proxyOrStub(process.env.BOOKINGS_URL, 'booking');
-  res.json(data);
-});
-
-app.get('/users', async (req, res) => {
-  const data = await proxyOrStub(process.env.USERS_URL, 'user');
-  res.json(data);
-});
-
-app.get('/payments', async (req, res) => {
-  const data = await proxyOrStub(process.env.PAYMENTS_URL, 'payment');
-  res.json(data);
-});
-
-app.get('/bike-rentals', async (req, res) => {
-  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
-
-  res.json(data);
-});
-
-app.get('/bike-rentals', async (req, res) => {
-  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
-  res.json(data);
-});
-
-const bikeRentalsProxy = (req, res) =>
-  proxyStreamOrStub(req, res, process.env.BIKE_RENTALS_URL, 'bike-rentals');
-
-app.get('/bike-rentals/availability', bikeRentalsProxy);
-app.post('/bike-rentals/book', bikeRentalsProxy);
-app.post('/bike-rentals/return', bikeRentalsProxy);
-app.post('/bike-rentals/documents/upload', bikeRentalsProxy);
-
-const port = process.env.PORT || 3000;
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
-
-module.exports = app;
+      response.headers.forE

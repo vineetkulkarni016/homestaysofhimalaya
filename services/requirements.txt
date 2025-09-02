@@ -2,8 +2,12 @@
 -r users/requirements.txt
 -r payments/requirements.txt
 
+-r cabs/requirements.txt
+
+
 
 
 -r bike_rentals/requirements.txt
+
 
 
