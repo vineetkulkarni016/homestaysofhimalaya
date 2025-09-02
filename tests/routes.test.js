@@ -3,6 +3,11 @@ const assert = require('node:assert/strict');
 const http = require('node:http');
 const app = require('../index');
 
+if (!globalThis.fetch) {
+  globalThis.fetch = (...args) =>
+    import('node-fetch').then(({ default: fetch }) => fetch(...args));
+}
+
 let server;
 
 const baseUrl = () => `http://localhost:${server.address().port}`;
