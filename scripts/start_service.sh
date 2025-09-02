@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SERVICE="$1"
+shift
 APP_ENV="${APP_ENV:-dev-integration}"
 CONFIG_FILE="config/${APP_ENV}.yml"
 
