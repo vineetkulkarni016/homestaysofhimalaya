@@ -1,9 +1,17 @@
 import os
 from io import BytesIO
 from datetime import date
-from typing import List
+from typing import Optional
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import (
+    Depends,
+    FastAPI,
+    Header,
+    HTTPException,
+    UploadFile,
+    File,
+    status,
+)
 from pydantic import BaseModel
 import boto3
 from botocore.exceptions import BotoCoreError, NoCredentialsError
@@ -16,29 +24,52 @@ except Exception:  # pragma: no cover - optional OCR
 
 from services.common.logging import get_logger
 
-logger = get_logger("bike-rentals-service")
-app = FastAPI()
+# ------------------------------------------------------------------------------
+# Auth & App setup
+# ------------------------------------------------------------------------------
+API_KEY = os.environ.get("API_KEY", "dev-key")
+OAUTH_TOKEN = os.environ.get("OAUTH_TOKEN", "dev-token")
 
-# In-memory data stores
+def verify_credentials(
+    x_api_key: Optional[str] = Header(default=None, alias="X-API-Key"),
+    authorization: Optional[str] = Header(default=None, alias="Authorization"),
+) -> None:
+    """Validate the incoming request contains proper auth headers.
+
+    Accepts either an exact `X-API-Key` match or an `Authorization` header
+    with a bearer token that matches the gateway's configured token.
+    Raises:
+        HTTPException: If neither credential is valid.
+    """
+    if x_api_key == API_KEY or (authorization and authorization == f"Bearer {OAUTH_TOKEN}"):
+        return
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+
+logger = get_logger("bike-rentals-service")
+app = FastAPI(dependencies=[Depends(verify_credentials)])
+
+# ------------------------------------------------------------------------------
+# In-memory stores
+# ------------------------------------------------------------------------------
 bikes = [
     {"id": 1, "model": "Hero Splendor", "available": True},
     {"id": 2, "model": "Bajaj Pulsar", "available": True},
 ]
 bookings: dict[int, dict] = {}
 
-
+# ------------------------------------------------------------------------------
+# Routes
+# ------------------------------------------------------------------------------
 @app.get("/")
-async def root():
+async def root() -> dict:
     """Service heartbeat."""
-    logger.info("root accessed", extra={"service": "bike-rentals"})
-    return {"service": "bike-rentals", "message": "Hello World"}
-
+    logger.info("root accessed", extra={"service": "bike_rentals"})
+    return {"service": "bike_rentals", "message": "Hello World"}
 
 @app.get("/availability")
-async def check_availability():
+async def check_availability() -> dict:
     """Return currently available bikes."""
     return {"available_bikes": [b for b in bikes if b["available"]]}
-
 
 class BookingRequest(BaseModel):
     user_id: int
@@ -46,9 +77,8 @@ class BookingRequest(BaseModel):
     start_date: date
     end_date: date
 
-
 @app.post("/book")
-async def book_bike(request: BookingRequest):
+async def book_bike(request: BookingRequest) -> dict:
     """Book a bike if available."""
     for bike in bikes:
         if bike["id"] == request.bike_id and bike["available"]:
@@ -65,13 +95,11 @@ async def book_bike(request: BookingRequest):
             return {"booking_id": booking_id}
     raise HTTPException(status_code=404, detail="Bike not available")
 
-
 class ReturnRequest(BaseModel):
     booking_id: int
 
-
 @app.post("/return")
-async def return_bike(request: ReturnRequest):
+async def return_bike(request: ReturnRequest) -> dict:
     """Mark a bike as returned."""
     booking = bookings.get(request.booking_id)
     if not booking:
@@ -86,10 +114,11 @@ async def return_bike(request: ReturnRequest):
     logger.info("bike returned", extra={"booking_id": request.booking_id})
     return {"status": "returned"}
 
-
+# ------------------------------------------------------------------------------
+# Document upload & OCR
+# ------------------------------------------------------------------------------
 s3_client = boto3.client("s3")
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "bike-rentals-dev")
-
 
 async def _process_document(file: UploadFile, name: str) -> dict:
     content = await file.read()
@@ -120,20 +149,20 @@ async def _process_document(file: UploadFile, name: str) -> dict:
         "manual_review": manual_review,
     }
 
-
 @app.post("/documents/upload")
 async def upload_documents(
     driving_license: UploadFile = File(...),
     aadhar_card: UploadFile = File(...),
-):
+) -> dict:
     """Upload and validate required documents."""
     results = []
     for doc, name in ((driving_license, "driving_license"), (aadhar_card, "aadhar_card")):
         results.append(await _process_document(doc, name))
     return {"documents": results}
 
-
+# ------------------------------------------------------------------------------
+# Entrypoint
+# ------------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)
