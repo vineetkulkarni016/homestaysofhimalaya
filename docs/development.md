@@ -30,10 +30,24 @@ Terraform configuration in `infra/` provisions:
 
 To deploy infrastructure:
 
-```bash
-cd infra
-terraform init
-terraform apply
-```
+1. Provide the database password securely. Either create a `terraform.tfvars` file in the `infra/` directory:
+
+   ```hcl
+   db_password = "your_db_password"
+   ```
+
+   or export it as an environment variable:
+
+   ```bash
+   export TF_VAR_db_password=your_db_password
+   ```
+
+2. Run Terraform:
+
+   ```bash
+   cd infra
+   terraform init
+   terraform apply
+   ```
 
 This will create resources in the AWS account configured in your environment.
