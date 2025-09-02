@@ -1,9 +1,9 @@
 # Testing Guide
 
-## Service
+## API
 1. Install dependencies:
    ```bash
-   cd service
+   cd api
    npm install
    ```
 2. Run unit tests:

@@ -12,7 +12,7 @@ const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 
 const app = express();
-const spec = yaml.load(fs.readFileSync(path.join(__dirname, 'service/openapi.yaml'), 'utf8'));
+const spec = yaml.load(fs.readFileSync(path.join(__dirname, 'api/openapi.yaml'), 'utf8'));
 
 const API_KEY = process.env.API_KEY || 'dev-key';
 const OAUTH_TOKEN = process.env.OAUTH_TOKEN || 'dev-token';

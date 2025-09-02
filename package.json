@@ -5,8 +5,10 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node index.js",
-    "docs": "redoc-cli bundle service/openapi.yaml -o docs/index.html",
+
+    "start": "node server.js",
+    "docs": "redoc-cli bundle api/openapi.yaml -o docs/index.html",
+
     "test": "node -e \"console.log('No tests')\""
   },
   "keywords": [],
