@@ -46,6 +46,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+  /payments:
+    get:
+      summary: Payment service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: Payment service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
 components:
   schemas:
     Homestay:
