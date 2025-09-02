@@ -176,6 +176,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
 
+  /support:
+    get:
+      summary: Customer care service status
+
+
   /payments/methods:
     get:
       summary: List available payment methods
@@ -266,16 +271,20 @@ paths:
   /bike-rentals:
     get:
       summary: Bike rentals service status
+
       security:
         - ApiKeyAuth: []
         - OAuth2ClientCredentials: []
       responses:
         '200':
+
           description: Bike rentals service root response
+
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
 
   /bike-rentals/availability:
     get:
@@ -389,6 +398,7 @@ paths:
                           type: string
                         manual_review:
                           type: boolean
+
 
 components:
   schemas:

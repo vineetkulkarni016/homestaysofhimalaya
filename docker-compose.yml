@@ -37,12 +37,31 @@ services:
       timeout: 5s
       retries: 3
 
+  customer_care:
+    build: ./services/customer_care
+    ports:
+      - "8003:8000"
+    environment:
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
   web:
     image: node:20
     working_dir: /app
     volumes:
       - .:/app
     command: ["node", "index.js"]
+
+    environment:
+      - DD_AGENT_HOST=datadog
+      - DD_ENV=production
+      - DD_SERVICE=homestaysofhimalaya
+      - DD_LOGS_ENABLED=true
+      - DD_APM_ENABLED=true
+      - DD_TRACE_AGENT_PORT=8126
+      - CUSTOMER_CARE_URL=http://customer_care:8000
+
     env_file:
       - .env
     healthcheck:
@@ -50,6 +69,7 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
     depends_on:
       - datadog
     ports:

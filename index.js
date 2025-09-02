@@ -60,6 +60,36 @@ async function proxyOrStub(serviceUrl, serviceName) {
   return { service: serviceName, message: 'Hello World' };
 }
 
+
+app.get('/bookings', async (req, res) => {
+  const data = await proxyOrStub(process.env.BOOKINGS_URL, 'booking');
+  res.json(data);
+});
+
+app.get('/users', async (req, res) => {
+  const data = await proxyOrStub(process.env.USERS_URL, 'user');
+  res.json(data);
+});
+
+app.get('/payments', async (req, res) => {
+  const data = await proxyOrStub(process.env.PAYMENTS_URL, 'payment');
+  res.json(data);
+});
+
+app.get('/support', async (req, res) => {
+  const data = await proxyOrStub(process.env.CUSTOMER_CARE_URL, 'customer_care');
+  res.json(data);
+});
+
+const port = process.env.PORT || 3000;
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+module.exports = app;
+
 async function proxyStreamOrStub(req, res, serviceUrl, serviceName) {
   if (serviceUrl) {
     try {
@@ -74,3 +104,4 @@ async function proxyStreamOrStub(req, res, serviceUrl, serviceName) {
       });
       res.status(response.status);
       response.headers.forE
+
