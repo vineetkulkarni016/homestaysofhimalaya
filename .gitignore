@@ -16,5 +16,9 @@ tmp/
 # Test outputs
 **/test-results/
 
+**/__pycache__/
+
+
 # Environment files
 .env
+
