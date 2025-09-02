@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+watchtower
+python-json-logger
+redis
+websockets

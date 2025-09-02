@@ -13,5 +13,15 @@ coverage/
 out/
 tmp/
 *.log
+# Python caches
+__pycache__/
+*.pyc
 # Test outputs
 **/test-results/
+
+**/__pycache__/
+
+
+# Environment files
+.env
+

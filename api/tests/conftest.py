@@ -1,11 +1,14 @@
 import importlib.util
 import pathlib
 import logging
+import sys
 import pytest
 
 
 def load_service_module(service_name: str):
     repo_root = pathlib.Path(__file__).resolve().parents[2]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
     module_path = repo_root / 'services' / service_name / 'app.py'
     spec = importlib.util.spec_from_file_location(f"{service_name}_app", module_path)
     module = importlib.util.module_from_spec(spec)
@@ -31,3 +34,8 @@ def users_module():
 @pytest.fixture(scope="module")
 def payments_module():
     return load_service_module('payments')
+
+
+@pytest.fixture(scope="module")
+def packages_module():
+    return load_service_module('packages')

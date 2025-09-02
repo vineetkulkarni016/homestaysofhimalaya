@@ -5,28 +5,37 @@ services:
     build: ./services/booking
     ports:
       - "8000:8000"
-    environment:
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   users:
     build: ./services/users
     ports:
       - "8001:8000"
-    environment:
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   payments:
     build: ./services/payments
     ports:
       - "8002:8000"
-    environment:
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   customer_care:
     build: ./services/customer_care
@@ -43,6 +52,7 @@ services:
     volumes:
       - .:/app
     command: ["node", "index.js"]
+
     environment:
       - DD_AGENT_HOST=datadog
       - DD_ENV=production
@@ -51,6 +61,15 @@ services:
       - DD_APM_ENABLED=true
       - DD_TRACE_AGENT_PORT=8126
       - CUSTOMER_CARE_URL=http://customer_care:8000
+
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
     depends_on:
       - datadog
     ports:
@@ -58,12 +77,13 @@ services:
 
   datadog:
     image: datadog/agent:7
-    environment:
-      - DD_API_KEY=${DD_API_KEY}
-      - DD_LOGS_ENABLED=true
-      - DD_APM_ENABLED=true
-      - DD_PROCESS_AGENT_ENABLED=true
-      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "agent", "health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc/:/host/proc/:ro
