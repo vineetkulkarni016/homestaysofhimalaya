@@ -2,11 +2,13 @@
   "name": "homestaysofhimalaya",
   "version": "1.0.0",
   "description": "Uttarakhand homestays bookings & rentals API with OpenAPI docs",
-  "main": "server.js",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
+
     "start": "node server.js",
-    "docs": "redoc-cli bundle service/openapi.yaml -o docs/index.html",
+    "docs": "redoc-cli bundle api/openapi.yaml -o docs/index.html",
+
     "test": "node -e \"console.log('No tests')\""
   },
   "keywords": [],
