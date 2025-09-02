@@ -1,3 +1,4 @@
+```yaml
 openapi: 3.0.0
 info:
   title: Homestays API
@@ -74,6 +75,7 @@ paths:
                     type: integer
                   size:
                     type: integer
+
   /bookings:
     get:
       summary: Booking service status
@@ -87,6 +89,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
   /bookings/itinerary/{booking_id}:
     get:
       summary: Retrieve itinerary for a booking
@@ -115,6 +118,7 @@ paths:
                           type: integer
                         activity:
                           type: string
+
   /bookings/history/{user_id}:
     get:
       summary: List booking history for a user
@@ -143,6 +147,7 @@ paths:
                           type: integer
                         status:
                           type: string
+
   /users:
     get:
       summary: User service status
@@ -156,6 +161,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
   /payments:
     get:
       summary: Payment service status
@@ -169,6 +175,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceStatus'
+
   /payments/methods:
     get:
       summary: List available payment methods
@@ -184,6 +191,7 @@ paths:
                     type: array
                     items:
                       type: string
+
   /payments/pay:
     post:
       summary: Process a payment
@@ -212,6 +220,7 @@ paths:
                     type: string
                   amount_charged:
                     type: number
+
   /packages:
     get:
       summary: List available travel packages
@@ -229,6 +238,7 @@ paths:
                       type: integer
                     name:
                       type: string
+
   /packages/recommendations:
     get:
       summary: Recommended packages
@@ -252,6 +262,134 @@ paths:
                     type: array
                     items:
                       type: integer
+
+  /bike-rentals:
+    get:
+      summary: Bike rentals service status
+      security:
+        - ApiKeyAuth: []
+        - OAuth2ClientCredentials: []
+      responses:
+        '200':
+          description: Bike rentals service root response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
+
+  /bike-rentals/availability:
+    get:
+      summary: List available bikes
+      responses:
+        '200':
+          description: Available bikes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available_bikes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        model:
+                          type: string
+
+  /bike-rentals/book:
+    post:
+      summary: Book a bike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                bike_id:
+                  type: integer
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id:
+                    type: integer
+
+  /bike-rentals/return:
+    post:
+      summary: Return a bike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                booking_id:
+                  type: integer
+      responses:
+        '200':
+          description: Bike returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+  /bike-rentals/documents/upload:
+    post:
+      summary: Upload driving license and Aadhar card
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                driving_license:
+                  type: string
+                  format: binary
+                aadhar_card:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        document:
+                          type: string
+                        s3_key:
+                          type: string
+                        text:
+                          type: string
+                        manual_review:
+                          type: boolean
+
 components:
   schemas:
     Homestay:
@@ -282,6 +420,8 @@ components:
           tokenUrl: https://example.com/oauth/token
           scopes:
             read: Read access to homestays
+
 security:
   - ApiKeyAuth: []
   - OAuth2ClientCredentials: []
+```

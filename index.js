@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
+const { Readable } = require('stream');
 
 if (!globalThis.fetch) {
   globalThis.fetch = (...args) =>
@@ -51,6 +52,31 @@ async function proxyOrStub(serviceUrl, serviceName) {
   return { service: serviceName, message: 'Hello World' };
 }
 
+async function proxyStreamOrStub(req, res, serviceUrl, serviceName) {
+  if (serviceUrl) {
+    try {
+      const url = new URL(req.originalUrl.replace(/^\/bike-rentals/, ''), serviceUrl);
+      const headers = { ...req.headers };
+      delete headers.host;
+      const response = await fetch(url, {
+        method: req.method,
+        headers,
+        body: ['GET', 'HEAD'].includes(req.method) ? undefined : req,
+        duplex: 'half'
+      });
+      res.status(response.status);
+      response.headers.forEach((value, key) => res.setHeader(key, value));
+      if (response.body) {
+        return Readable.fromWeb(response.body).pipe(res);
+      }
+      return res.end();
+    } catch (err) {
+      console.warn(`Failed to proxy ${serviceName} service:`, err.message);
+    }
+  }
+  res.json({ service: serviceName, message: 'Hello World' });
+}
+
 app.get('/bookings', async (req, res) => {
   const data = await proxyOrStub(process.env.BOOKINGS_URL, 'booking');
   res.json(data);
@@ -65,6 +91,25 @@ app.get('/payments', async (req, res) => {
   const data = await proxyOrStub(process.env.PAYMENTS_URL, 'payment');
   res.json(data);
 });
+
+app.get('/bike-rentals', async (req, res) => {
+  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
+
+  res.json(data);
+});
+
+app.get('/bike-rentals', async (req, res) => {
+  const data = await proxyOrStub(process.env.BIKE_RENTALS_URL, 'bike-rentals');
+  res.json(data);
+});
+
+const bikeRentalsProxy = (req, res) =>
+  proxyStreamOrStub(req, res, process.env.BIKE_RENTALS_URL, 'bike-rentals');
+
+app.get('/bike-rentals/availability', bikeRentalsProxy);
+app.post('/bike-rentals/book', bikeRentalsProxy);
+app.post('/bike-rentals/return', bikeRentalsProxy);
+app.post('/bike-rentals/documents/upload', bikeRentalsProxy);
 
 const port = process.env.PORT || 3000;
 if (require.main === module) {
