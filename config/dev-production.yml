@@ -7,3 +7,4 @@ payments:
 users:
   database_url: "/homestaysofhimalaya/dev-production/users/database_url"
   redis_url: "/homestaysofhimalaya/dev-production/users/redis_url"
+
