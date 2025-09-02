@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "docs": "redoc-cli bundle service/openapi.yaml -o docs/index.html",
+    "docs": "redoc-cli bundle api/openapi.yaml -o docs/index.html",
     "test": "node -e \"console.log('No tests')\""
   },
   "keywords": [],
